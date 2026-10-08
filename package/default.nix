@@ -141,9 +141,6 @@ let
       mkdir -p "$out"
       cp -r opt/baidunetdisk/* "$out/"
 
-      # https://aur.archlinux.org/packages/baidunetdisk-electron
-      rm -f "$out/chrome-sandbox" "$out/chrome_crashpad_handler" "$out/baidunetdiskhost"
-
       mkdir -p "$out/bin"
       makeWrapper "$out/baidunetdisk" "$out/bin/baidunetdisk" \
         --add-flags --no-sandbox
