@@ -7,15 +7,14 @@ Nix packaging for [Baidu Netdisk](https://pan.baidu.com) — the official Linux 
 ```nix
 {
   inputs = {
-    baidunetdisk.url = "github:yueyinqiu/baidunetdisk-nix";
+    baidunetdisk.url = "github:yueyinqiu/BaidunetdiskNix";
   };
 }
 ```
 
 ## Package
 
-The package is `unfree` and only available on `x86_64-linux`, so `allowUnfree`
-must be enabled:
+The package is `unfree` and only available on `x86_64-linux`, so `allowUnfree` must be enabled:
 
 ```nix
 {
@@ -32,12 +31,8 @@ $ nix run github:yueyinqiu/baidunetdisk-nix
 
 ## Notes
 
-- The app bundles its own Electron, which keeps its original `/lib64/...`
-  interpreter and does not tolerate ELF patching. It is therefore run inside an
-  FHS environment (`buildFHSEnv`) rather than being patched.
-- The gtk2/gtkmm2 stack required by the bundled `libbrowserengine.so` is taken
-  from an older nixpkgs pin, as those packages have been removed from recent
-  nixpkgs.
+- The app bundles its own Electron, which keeps its original `/lib64/...` interpreter and does not tolerate ELF patching. It is therefore run inside an FHS environment (`buildFHSEnv`) rather than being patched.
+- The gtk2/gtkmm2 stack required by the bundled `libbrowserengine.so` is taken from an older nixpkgs pin, as those packages have been removed from recent nixpkgs.
 
 ---
 
