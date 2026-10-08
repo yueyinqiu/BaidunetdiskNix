@@ -131,26 +131,23 @@ let
 
     unpackPhase = ''
       runHook preUnpack
-      dpkg -x $src .
+      dpkg -x "$src" .
       runHook postUnpack
     '';
 
     installPhase = ''
       runHook preInstall
 
-      mkdir -p $out
-      cp -r opt/baidunetdisk/* $out/
+      mkdir -p "$out"
+      cp -r opt/baidunetdisk/* "$out/"
 
-      # Trim the bundled Electron. Cleanup adapted from AUR's
-      # baidunetdisk-electron PKGBUILD
-      # (https://aur.archlinux.org/packages/baidunetdisk-electron),
-      # with extra trim (baidunetdiskhost) from x12w/baidunetdisk-nix.
-      rm -f $out/chrome-sandbox $out/chrome_crashpad_handler $out/baidunetdiskhost
-      rm -rf $out/LICENSE.* $out/locales
+      # https://aur.archlinux.org/packages/baidunetdisk-electron
+      rm -f "$out/chrome-sandbox" "$out/chrome_crashpad_handler" "$out/baidunetdiskhost"
+      rm -rf "$out/LICENSE."* "$out/locales"
 
-      mkdir -p $out/bin
-      makeWrapper $out/baidunetdisk $out/bin/baidunetdisk \
-        --add-flags "--no-sandbox"
+      mkdir -p "$out/bin"
+      makeWrapper "$out/baidunetdisk" "$out/bin/baidunetdisk" \
+        --add-flags --no-sandbox
 
       runHook postInstall
     '';
@@ -166,13 +163,13 @@ buildFHSEnv {
   multiPkgs = _: libraries;
 
   extraInstallCommands = ''
-    mkdir -p $out/share/applications $out/share/icons/hicolor/scalable/apps
-    cp ${app}/baidunetdisk.desktop $out/share/applications/baidunetdisk.desktop
-    substituteInPlace $out/share/applications/baidunetdisk.desktop \
+    mkdir -p "$out/share/applications" "$out/share/icons/hicolor/scalable/apps"
+    cp "${app}/baidunetdisk.desktop" "$out/share/applications/baidunetdisk.desktop"
+    substituteInPlace "$out/share/applications/baidunetdisk.desktop" \
       --replace-fail 'Exec=/opt/baidunetdisk/baidunetdisk --no-sandbox %U' \
-                     "Exec=$out/bin/baidunetdisk %U"
-    ln -s ${app}/baidunetdisk.svg \
-      $out/share/icons/hicolor/scalable/apps/baidunetdisk.svg
+                     "Exec=\"$out/bin/baidunetdisk\" %U"
+    ln -s "${app}/baidunetdisk.svg" \
+      "$out/share/icons/hicolor/scalable/apps/baidunetdisk.svg"
   '';
 
   meta = {
