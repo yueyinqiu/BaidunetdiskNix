@@ -5,8 +5,6 @@
   fetchurl,
   dpkg,
   makeWrapper,
-  copyDesktopItems,
-  makeDesktopItem,
   udev,
   # runtime libraries
   alsa-lib,
@@ -130,7 +128,6 @@ let
 
     nativeBuildInputs = [
       makeWrapper
-      copyDesktopItems
       dpkg
     ];
 
@@ -166,16 +163,13 @@ let
       makeWrapper $out/baidunetdisk $out/bin/baidunetdisk \
         --add-flags "--no-sandbox"
 
-      install -Dm644 opt/baidunetdisk/baidunetdisk.svg \
-        $out/share/icons/hicolor/scalable/apps/baidunetdisk.svg
-
       runHook postInstall
     '';
   };
 in
 buildFHSEnv {
   name = "baidunetdisk";
-  inherit version;
+  version = version;
 
   targetPkgs = _: [ app ];
   runScript = "baidunetdisk";
@@ -183,30 +177,13 @@ buildFHSEnv {
   # Everything the bundled Electron expects at conventional FHS paths.
   multiPkgs = _: libraries;
 
-  desktopItems = [
-    (makeDesktopItem {
-      name = "baidunetdisk";
-      desktopName = "Baidu Netdisk";
-      exec = "baidunetdisk %U";
-      terminal = false;
-      icon = "baidunetdisk";
-      startupWMClass = "baidunetdisk";
-      comment = "Baidu Netdisk";
-      mimeTypes = [ "x-scheme-handler/baiduyunguanjia" ];
-      categories = [ "Network" ];
-      extraConfig = {
-        "Name[zh_CN]" = "百度网盘";
-        "Name[zh_TW]" = "百度網盤";
-        "Comment[zh_CN]" = "百度网盘";
-        "Comment[zh_TW]" = "百度網盤";
-      };
-    })
-  ];
-
   extraInstallCommands = ''
-    # Make the icon resolvable from within the FHS wrapper.
-    mkdir -p $out/share/icons/hicolor/scalable/apps
-    ln -s ${app}/share/icons/hicolor/scalable/apps/baidunetdisk.svg \
+    # Reuse the .desktop shipped in the deb, only fixing the Exec path (the
+    # binary is on PATH inside the FHS, and --no-sandbox is added by runScript).
+    mkdir -p $out/share/applications $out/share/icons/hicolor/scalable/apps
+    sed 's|^Exec=.*|Exec=baidunetdisk %U|' ${app}/baidunetdisk.desktop \
+      > $out/share/applications/baidunetdisk.desktop
+    ln -s ${app}/baidunetdisk.svg \
       $out/share/icons/hicolor/scalable/apps/baidunetdisk.svg
   '';
 
