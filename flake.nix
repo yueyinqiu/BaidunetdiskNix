@@ -28,9 +28,7 @@
           };
           package = pkgs.callPackage ./package {
             gtkmm2 = pkgsGtk2.gtkmm2;
-            gtk2 = pkgsGtk2.gtk2;
             glibmm = pkgsGtk2.glibmm;
-            atkmm = pkgsGtk2.atkmm;
             cairomm = pkgsGtk2.cairomm;
             pangomm = pkgsGtk2.pangomm;
             libsigcxx = pkgsGtk2.libsigcxx;
