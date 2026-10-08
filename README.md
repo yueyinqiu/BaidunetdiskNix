@@ -26,7 +26,7 @@ The package is `unfree` and only available on `x86_64-linux`, so `allowUnfree` m
 Or run it directly:
 
 ```console
-$ nix run github:yueyinqiu/baidunetdisk-nix
+$ nix run github:yueyinqiu/BaidunetdiskNix
 ```
 
 ## Notes
