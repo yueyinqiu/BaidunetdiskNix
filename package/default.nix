@@ -174,7 +174,7 @@ buildFHSEnv {
     description = "Baidu Netdisk (百度网盘)";
     homepage = "https://pan.baidu.com/";
     platforms = [ "x86_64-linux" ];
-    license = lib.licenses.unfreeRedistributable;
+    license = lib.licenses.unfree;
     sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
     mainProgram = "baidunetdisk";
   };
