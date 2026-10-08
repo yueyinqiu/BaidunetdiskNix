@@ -10,6 +10,7 @@
     {
       nixpkgs,
       nixpkgs-gtk2,
+      ...
     }:
     let
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
@@ -24,7 +25,6 @@
           };
           pkgsGtk2 = import nixpkgs-gtk2 {
             system = system;
-            config.allowUnfree = true;
           };
           package = pkgs.callPackage ./package {
             gtkmm2 = pkgsGtk2.gtkmm2;
