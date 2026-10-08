@@ -3,17 +3,13 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # Only used to obtain the gtk2/gtkmm2 stack, whose ABI the bundled
-    # `libbrowserengine.so` links against. These were removed from recent
-    # nixpkgs, so keep them on this older pin.
-    nixpkgs-old.url = "github:NixOS/nixpkgs/f13ff45afd1bb73e640eaa08a7066dbed07e3238";
+    nixpkgs-gtk2.url = "github:NixOS/nixpkgs/f13ff45afd1bb73e640eaa08a7066dbed07e3238";
   };
 
   outputs =
     {
-      self,
       nixpkgs,
-      nixpkgs-old,
+      nixpkgs-gtk2,
     }:
     let
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
@@ -23,23 +19,21 @@
         system:
         let
           pkgs = import nixpkgs {
-            inherit system;
+            system = system;
             config.allowUnfree = true;
           };
-          pkgsOld = import nixpkgs-old {
-            inherit system;
+          pkgsGtk2 = import nixpkgs-gtk2 {
+            system = system;
             config.allowUnfree = true;
           };
           package = pkgs.callPackage ./package {
-            inherit (pkgsOld)
-              gtkmm2
-              gtk2
-              glibmm
-              atkmm
-              cairomm
-              pangomm
-              libsigcxx
-              ;
+            gtkmm2 = pkgsGtk2.gtkmm2;
+            gtk2 = pkgsGtk2.gtk2;
+            glibmm = pkgsGtk2.glibmm;
+            atkmm = pkgsGtk2.atkmm;
+            cairomm = pkgsGtk2.cairomm;
+            pangomm = pkgsGtk2.pangomm;
+            libsigcxx = pkgsGtk2.libsigcxx;
           };
         in
         {
