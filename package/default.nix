@@ -143,7 +143,7 @@ let
 
       # https://aur.archlinux.org/packages/baidunetdisk-electron
       rm -f "$out/chrome-sandbox" "$out/chrome_crashpad_handler" "$out/baidunetdiskhost"
-      rm -rf "$out/LICENSE."* "$out/locales"
+      rm -rf "$out/locales"
 
       mkdir -p "$out/bin"
       makeWrapper "$out/baidunetdisk" "$out/bin/baidunetdisk" \
