@@ -113,13 +113,9 @@ let
     xz
   ];
 
-  # The unpacked application. Its bundled Electron keeps its original
-  # `/lib64/ld-linux-x86-64.so.2` interpreter on purpose: patching the ELF
-  # makes it abort right after startup. It is therefore run inside an FHS
-  # environment below, which provides that interpreter.
   app = stdenv.mkDerivation {
     pname = "baidunetdisk";
-    inherit version;
+    version = version;
 
     src = fetchurl {
       url = "https://pkg-ant.baidu.com/issue/netdisk/LinuxGuanjia/${version}/baidunetdisk_${version}_amd64.deb";
@@ -131,9 +127,7 @@ let
       dpkg
     ];
 
-    # Deliberately *no* autoPatchelfHook — see note above.
     dontPatchELF = true;
-    dontAutoPatchelf = true;
 
     unpackPhase = ''
       runHook preUnpack
@@ -174,15 +168,14 @@ buildFHSEnv {
   targetPkgs = _: [ app ];
   runScript = "baidunetdisk";
 
-  # Everything the bundled Electron expects at conventional FHS paths.
   multiPkgs = _: libraries;
 
   extraInstallCommands = ''
-    # Reuse the .desktop shipped in the deb, only fixing the Exec path (the
-    # binary is on PATH inside the FHS, and --no-sandbox is added by runScript).
     mkdir -p $out/share/applications $out/share/icons/hicolor/scalable/apps
-    sed 's|^Exec=.*|Exec=baidunetdisk %U|' ${app}/baidunetdisk.desktop \
-      > $out/share/applications/baidunetdisk.desktop
+    cp ${app}/baidunetdisk.desktop $out/share/applications/baidunetdisk.desktop
+    substituteInPlace $out/share/applications/baidunetdisk.desktop \
+      --replace-fail 'Exec=/opt/baidunetdisk/baidunetdisk --no-sandbox %U' \
+                     "Exec=$out/bin/baidunetdisk %U"
     ln -s ${app}/baidunetdisk.svg \
       $out/share/icons/hicolor/scalable/apps/baidunetdisk.svg
   '';
