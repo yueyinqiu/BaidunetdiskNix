@@ -141,17 +141,12 @@ let
       mkdir -p $out
       cp -r opt/baidunetdisk/* $out/
 
-      # The bundled sandbox / crash handler need setuid, which does not work in Nix.
+      # Trim the bundled Electron. Cleanup adapted from AUR's
+      # baidunetdisk-electron PKGBUILD
+      # (https://aur.archlinux.org/packages/baidunetdisk-electron),
+      # with extra trim (baidunetdiskhost) from x12w/baidunetdisk-nix.
       rm -f $out/chrome-sandbox $out/chrome_crashpad_handler $out/baidunetdiskhost
-
-      # The bundled locale packs trigger "Invalid file descriptor to ICU data"
-      # and the app aborts right after startup.
       rm -rf $out/LICENSE.* $out/locales
-
-      # Drop Windows/macOS-only native addons.
-      find $out/resources/app.asar.unpacked -path "*/build/node_gyp_bins/*" -delete 2>/dev/null || true
-      find $out/resources/app.asar.unpacked -path "*/windows-*/*" -delete 2>/dev/null || true
-      find $out/resources/app.asar.unpacked -path "*/macos-*/*" -delete 2>/dev/null || true
 
       mkdir -p $out/bin
       makeWrapper $out/baidunetdisk $out/bin/baidunetdisk \
