@@ -1,4 +1,4 @@
-# baidunetdisk-nix
+# BaidunetdiskNix
 
 Nix packaging for [Baidu Netdisk](https://pan.baidu.com) — the official Linux desktop client for Baidu Netdisk (百度网盘).
 
