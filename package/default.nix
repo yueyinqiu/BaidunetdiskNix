@@ -62,7 +62,6 @@ let
 
   libraries = [
     stdenv.cc.cc.lib
-    udev
     alsa-lib
     at-spi2-atk
     at-spi2-core
@@ -81,26 +80,18 @@ let
     gtk2
     gtk3
     gtkmm2
-    libappindicator
-    libdbusmenu
     libdrm
     libgbm
     libglvnd
-    libnotify
-    libpulseaudio
     libsigcxx
     libx11
     libxcb
     libxcomposite
-    libxcursor
     libxdamage
     libxext
     libxfixes
-    libxi
     libxkbcommon
     libxrandr
-    libxrender
-    libxscrnsaver
     libxshmfence
     libxt
     libxtst
@@ -109,6 +100,17 @@ let
     nss
     pango
     pangomm
+
+    # https://github.com/x12w/baidunetdisk-nix
+    udev
+    libappindicator
+    libdbusmenu
+    libnotify
+    libpulseaudio
+    libxrender
+    libxscrnsaver
+    libxcursor
+    libxi
     systemd
     xz
   ];
